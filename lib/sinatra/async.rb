@@ -95,7 +95,7 @@ module Sinatra #:nodoc:
           settings.set :async_schedules, [] unless settings.respond_to? :async_schedules
           settings.async_schedules << lambda { async_catch_execute(&b) }
         else
-          native_async_schedule { async_catch_execute(&b) }
+          native_async_schedule { Fiber.new { async_catch_execute(&b) }.resume }
         end
       end
 
